@@ -1,8 +1,7 @@
 package com.example.eScape.dto.SubCategoryDTO;
 
-import com.example.eScape.model.SubCategory;
-import com.example.eScape.validation.InsertGroup;
-import com.example.eScape.validation.UpdateGroup;
+import com.example.eScape.validation.groups.InsertGroup;
+import com.example.eScape.validation.groups.UpdateGroup;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -5,8 +5,8 @@ import com.example.eScape.common.ApiResponse;
 import com.example.eScape.dto.SubCategoryDTO.SubCategoryRequestDTO;
 import com.example.eScape.dto.SubCategoryDTO.SubCategoryResponseDTO;
 import com.example.eScape.service.SubCategoryService;
-import com.example.eScape.validation.InsertGroup;
-import com.example.eScape.validation.UpdateGroup;
+import com.example.eScape.validation.groups.InsertGroup;
+import com.example.eScape.validation.groups.UpdateGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ public class SubCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<SubCategoryResponseDTO>> insertSubCategory(
+    public ResponseEntity<ApiResponse<Void>> insertSubCategory(
             @Validated(InsertGroup.class) @RequestBody SubCategoryRequestDTO subCategoryRequestDTO) {
         subCategoryService.insert(subCategoryRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -41,7 +41,7 @@ public class SubCategoryController {
     }
 
     @PutMapping
-    public ResponseEntity<ApiResponse<SubCategoryResponseDTO>> updateSubCategory(
+    public ResponseEntity<ApiResponse<Void>> updateSubCategory(
             @Validated(UpdateGroup.class) @RequestBody SubCategoryRequestDTO subCategoryRequestDTO) {
         subCategoryService.update(subCategoryRequestDTO);
         return ResponseEntity.ok(new ApiResponse<>(true, ApiConstants.SUBCATEGORY_UPDATED_SUCCESS));
