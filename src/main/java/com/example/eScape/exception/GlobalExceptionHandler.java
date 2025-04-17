@@ -56,6 +56,11 @@ public class GlobalExceptionHandler {
         return buildApiError(HttpStatus.FORBIDDEN, "Access Denied", request);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiError> handleBadRequest(AccessDeniedException ex, HttpServletRequest request) {
+        return buildApiError(HttpStatus.FORBIDDEN, "Bad request", request);
+    }
+
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ApiError> handleDuplicateResource(DuplicateResourceException ex, HttpServletRequest request) {
         return buildApiError(HttpStatus.BAD_REQUEST, "Duplicate Resource.", request);
@@ -68,7 +73,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleAllUncaughtException(Exception ex, HttpServletRequest request) {
-        return buildApiError(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred.", request);
+        return buildApiError(HttpStatus.BAD_REQUEST, "An unexpected error occurred.", request);
     }
 
 }

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.eScape.repository.ProductDetailsRepository">
+    <select id="findCollections"
+            parameterType="com.example.eScape.dto.ProductDetailsDTO.ProductFilterRequest"
+            resultType="com.example.eScape.dto.ProductDetailsDTO.ProductDetailsResponseDTO">
+
+        WITH ranked AS (
+        SELECT
+        PD.productdetailid,
+        PD.productid,
+        TO_CHAR(PD.price, 'FM999,999,999') AS price,
+        PD.productimage,
+        PD.subimage,
+        P.productname,
+        PD.size,
+        PD.color,
+        COALESCE(
+        STRING_AGG(DISTINCT PD2.color, ',' ORDER BY PD2.color), ''
+        ) AS availableColors,
+        ROW_NUMBER() OVER (PARTITION BY PD.productid, PD.color ORDER BY PD.productdetailid) AS rn
+
+        FROM productdetails PD
+        JOIN product P ON PD.productid = P.productid
+        JOIN productdetails PD2 ON PD.productid = PD2.productid
+
+        <where>
+            PD.isdeleted = FALSE
+            AND P.isdeleted = FALSE
+
+            <if test="colors != null and colors.size() > 0">
+                AND PD.color IN
+                <foreach item="color" collection="colors" open="(" separator="," close=")">
+                    #{color}
+                </foreach>
+            </if>
+
+            <if test="sizes != null and sizes.size() > 0">
+                AND PD.size IN
+                <foreach item="size" collection="sizes" open="(" separator="," close=")">
+                    #{size}
+                </foreach>
+            </if>
+
+            <if test="minPrice != null">
+                AND PD.price &gt;= #{minPrice}
+            </if>
+
+            <if test="maxPrice != null">
+                AND PD.price &lt;= #{maxPrice}
+            </if>
+
+            <if test="subCategoryId != null and subCategoryId != ''">
+                AND P.subcategoryid = #{subCategoryId}
+            </if>
+        </where>
+        GROUP BY
+        PD.productdetailid,
+        PD.productid,
+        PD.price,
+        PD.productimage,
+        PD.subimage,
+        P.productname,
+        PD.size,
+        PD.color
+        )
+
+        SELECT *
+        FROM ranked
+        WHERE rn = 1
+
+        <if test="orderByField != null and orderByDirection != null">
+            ORDER BY
+            <choose>
+                <when test="orderByField == 'price'">price</when>
+                <when test="orderByField == 'quantity'">quantity</when>
+                <otherwise>productdetailid</otherwise>
+            </choose>
+            <choose>
+                <when test="orderByDirection == 'desc'">DESC</when>
+                <otherwise>ASC</otherwise>
+            </choose>
+        </if>
+
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+</mapper>
