@@ -8,9 +8,12 @@ import com.example.eScape.exception.DuplicateResourceException;
 import com.example.eScape.exception.ResourceNotFoundException;
 import com.example.eScape.mapper.ProductDetailsMapper;
 import com.example.eScape.repository.ProductDetailsRepository;
+import com.example.eScape.repository.ProductDetailsVariantsRepository;
 import com.example.eScape.service.ProductDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,15 +21,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProductDetailsServiceImpl implements ProductDetailsService {
     private final ProductDetailsRepository productDetailsRepository;
+    private final ProductDetailsVariantsRepository productDetailsVariantsRepository;
     private final ProductDetailsMapper productDetailsMapper;
-
-    @Autowired
-    public ProductDetailsServiceImpl(ProductDetailsRepository productDetailsRepository, ProductDetailsMapper productDetailsMapper) {
-        this.productDetailsRepository = productDetailsRepository;
-        this.productDetailsMapper = productDetailsMapper;
-    }
 
     @Override
     public List<ProductDetailsResponseDTO> findAll() {
@@ -50,6 +49,24 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
     @Override
     public List<ProductDetailsResponseDTO> findCollections(ProductFilterRequest productFilterRequest) {
         return productDetailsRepository.findCollections(productFilterRequest);
+    }
+
+    @Override
+    @Transactional
+    public Optional<ProductDetailsResponseDTO> getProductDetails(String productId, String color) {
+        productDetailsVariantsRepository.dropAvailableColors();
+        productDetailsVariantsRepository.createAvailableColors();
+        productDetailsVariantsRepository.populateAvailableColors(productId);
+
+        productDetailsVariantsRepository.dropAvailableSizes();
+        productDetailsVariantsRepository.createAvailableSizes();
+        productDetailsVariantsRepository.populateAvailableSizes(productId);
+
+        productDetailsVariantsRepository.dropActiveSizes();
+        productDetailsVariantsRepository.createActiveSizes();
+        productDetailsVariantsRepository.populateActiveSizes(productId, color);
+
+        return productDetailsVariantsRepository.getFinalResult(productId, color);
     }
 
     @Override

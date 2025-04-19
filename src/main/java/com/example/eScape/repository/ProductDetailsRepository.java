@@ -30,8 +30,6 @@ public interface ProductDetailsRepository {
     @Select("SELECT * FROM productdetails WHERE productdetailid = #{id} ")
     Optional<ProductDetails> findById(String id);
 
-    Optional
-
     List<ProductDetailsResponseDTO> findCollections(ProductFilterRequest productFilterRequest);
 
     @Insert("""

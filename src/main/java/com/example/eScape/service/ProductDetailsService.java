@@ -12,6 +12,7 @@ public interface ProductDetailsService {
     List<ProductDetailsResponseDTO> findByProductId(String productId);
     Optional<ProductDetailsResponseDTO> findById(String productId);
     List<ProductDetailsResponseDTO> findCollections(ProductFilterRequest productFilterRequest);
+    Optional<ProductDetailsResponseDTO> getProductDetails(String productId, String color);
     void insert(ProductDetailsRequestDTO productResponseDTO);
     void update(ProductDetailsRequestDTO productRequestDTO);
 }

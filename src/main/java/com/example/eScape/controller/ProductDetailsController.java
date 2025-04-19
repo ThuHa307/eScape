@@ -10,6 +10,8 @@ import com.example.eScape.service.ProductDetailsService;
 import com.example.eScape.validation.groups.InsertGroup;
 import com.example.eScape.validation.groups.UpdateGroup;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +41,12 @@ public class ProductDetailsController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, ApiConstants.PRODUCTDETAIL_FETCHED_SUCCESS, response));
+    }
+
+    @GetMapping("{productId}")
+    public ResponseEntity<ApiResponse<ProductDetailsResponseDTO>> getProductDetails(@PathVariable @NotBlank String productId, @RequestParam @NotBlank String color) throws NotFoundException {
+        var productDetails = productDetailsService.getProductDetails(productId, color).orElseThrow(() -> new NotFoundException(ApiConstants.RESOURCE_NOT_FOUND));
+        return ResponseEntity.ok(new ApiResponse<>(true, ApiConstants.PRODUCTDETAIL_FETCHED_SUCCESS, productDetails));
     }
 
     @GetMapping

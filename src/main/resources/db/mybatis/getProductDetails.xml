@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.eScape.repository.ProductDetailsVariantsRepository">
+    <update id="dropAvailableColors">
+        DROP TABLE IF EXISTS AVAILABLECOLORS;
+    </update>
+
+    <update id="createAvailableColors">
+        CREATE TEMP TABLE AVAILABLECOLORS (
+              productId VARCHAR(50),
+              availableColors VARCHAR(255)
+        );
+    </update>
+
+    <update id="populateAvailableColors">
+        INSERT INTO AVAILABLECOLORS (productId, availableColors)
+        SELECT productid,
+               COALESCE(STRING_AGG(DISTINCT color, ',' ORDER BY color), '') AS availableColors
+        FROM productdetails
+        WHERE productid = #{productId}
+        GROUP BY productid;
+    </update>
+
+    <update id="dropAvailableSizes">
+        DROP TABLE IF EXISTS AVAILABLESIZES;
+    </update>
+
+    <update id="createAvailableSizes">
+        CREATE TEMP TABLE AVAILABLESIZES (
+            productId VARCHAR(50),
+            availableSizes VARCHAR(255)
+        );
+    </update>
+
+    <update id="populateAvailableSizes">
+        INSERT INTO AVAILABLESIZES (productId, availableSizes)
+        SELECT productid,
+               COALESCE(STRING_AGG(DISTINCT size, ',' ORDER BY size), '') AS availableSizes
+        FROM productdetails
+        WHERE productid = #{productId}
+        GROUP BY productid;
+    </update>
+
+    <update id="dropActiveSizes">
+        DROP TABLE IF EXISTS ACTIVESIZES;
+    </update>
+
+    <update id="createActiveSizes">
+        CREATE TEMP TABLE ACTIVESIZES (
+            productId VARCHAR(50),
+            activeSizes VARCHAR(255)
+        );
+    </update>
+
+    <update id="populateActiveSizes">
+        INSERT INTO ACTIVESIZES (productId, activeSizes)
+        SELECT productid,
+               COALESCE(STRING_AGG(DISTINCT size, ',' ORDER BY size), '') AS activeSizes
+        FROM productdetails
+        WHERE productid = #{productId}
+          AND color = #{color}
+        GROUP BY productid;
+    </update>
+
+    <select id="getFinalResult" parameterType="map" resultType="com.example.eScape.dto.ProductDetailsDTO.ProductDetailsResponseDTO">
+        SELECT DISTINCT
+            P.productid,
+            PD.color,
+            P.productname,
+            PD.price,
+            PD.quantity,
+            PD.productimage,
+            PD.subimage,
+            AVC.availableColors,
+            AVS.availableSizes,
+            ATS.activeSizes
+        FROM productdetails PD
+             JOIN product P ON PD.productid = P.productid
+             JOIN AVAILABLECOLORS AVC ON PD.productid = AVC.productid
+             JOIN AVAILABLESIZES AVS ON PD.productid = AVS.productid
+             JOIN ACTIVESIZES ATS ON PD.productid = ATS.productid
+        WHERE PD.productid = #{productId}
+          AND PD.color = #{color}
+    </select>
+
+</mapper>

@@ -21,4 +21,6 @@ public class ProductDetailsResponseDTO {
     private String productImage;
     private String subImage;
     private String availableColors;
+    private String availableSizes;
+    private String activeSizes;
 }
