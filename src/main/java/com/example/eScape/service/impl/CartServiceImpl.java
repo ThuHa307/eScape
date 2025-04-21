@@ -4,11 +4,9 @@ import static org.mybatis.dynamic.sql.SqlBuilder.*;
 
 import com.example.eScape.dto.CartDTO.CartRequestDTO;
 import com.example.eScape.dto.CartDTO.CartResponseDTO;
-import com.example.eScape.dto.ProductDetailsDTO.ProductDetailsResponseDTO;
 import com.example.eScape.exception.BadRequestException;
 import com.example.eScape.mapper.CartMapper;
 import com.example.eScape.model.Cart;
-import com.example.eScape.model.ProductDetails;
 import com.example.eScape.repository.CartRepository;
 import com.example.eScape.repository.provider.CartDynamicSqlSupport;
 import com.example.eScape.service.CartService;
@@ -20,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

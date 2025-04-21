@@ -24,6 +24,10 @@ public class ApiConstants {
     public static final String CART_ITEM_FETCHED_SUCCESS = "Cart items fetched successfully";
     public static final String CART_ITEM_DELETED_SUCCESS = "Cart item deleted successfully";
 
+    public static final String WISHLIST_CREATED_SUCCESS = "Wishlist item created successfully";
+    public static final String WISHLIST_FETCHED_SUCCESS = "Wishlist items fetched successfully";
+    public static final String WISHLIST_DUPLICATE = "Wishlist item already exists";
+
     public static final String VALIDATION_FAILED = "Validation failed";
     public static final String RESOURCE_NOT_FOUND = "Resource not found";
     public static final String INTERNAL_SERVER_ERROR = "Internal server error";
