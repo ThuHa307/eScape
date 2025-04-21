@@ -57,8 +57,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ApiError> handleBadRequest(AccessDeniedException ex, HttpServletRequest request) {
-        return buildApiError(HttpStatus.FORBIDDEN, "Bad request", request);
+    public ResponseEntity<ApiError> handleBadRequest(BadRequestException ex, HttpServletRequest request) {
+        return buildApiError(HttpStatus.FORBIDDEN, ex.getMessage(), request);
     }
 
     @ExceptionHandler(DuplicateResourceException.class)

@@ -45,6 +45,6 @@ public interface ProductDetailsRepository {
     """)
     void update(ProductDetails productDetails);
 
-    @Select("SELECT * FROM productdetails WHERE productdetailid = #{productId} AND color = #{color} AND size = #{size} ")
-    Optional<ProductDetails> findByCriteria(String productId, String color, String size);
+    @Select("SELECT * FROM productdetails WHERE productid = #{productId} AND color = #{color} AND size = #{size} ")
+    Optional<ProductDetailsResponseDTO> findByCriteria(String productId, String color, String size);
 }

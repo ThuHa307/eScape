@@ -47,6 +47,11 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
     }
 
     @Override
+    public Optional<ProductDetailsResponseDTO> findByCriteria(String productId, String color, String size) {
+        return productDetailsRepository.findByCriteria(productId, color,size);
+    }
+
+    @Override
     public List<ProductDetailsResponseDTO> findCollections(ProductFilterRequest productFilterRequest) {
         return productDetailsRepository.findCollections(productFilterRequest);
     }
@@ -71,7 +76,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
     @Override
     public void insert(ProductDetailsRequestDTO productDTO) {
-        var existingProductDetails = productDetailsRepository.findByCriteria(
+        var existingProductDetails = findByCriteria(
                 productDTO.getProductId(), productDTO.getColor(), productDTO.getSize());
         if (existingProductDetails.isPresent()) {
             throw new DuplicateResourceException(ApiConstants.PRODUCTDETAIL_DUPLICATE);

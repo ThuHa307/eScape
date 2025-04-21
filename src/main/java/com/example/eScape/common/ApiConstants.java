@@ -19,6 +19,11 @@ public class ApiConstants {
     public static final String PRODUCTDETAIL_FETCHED_SUCCESS = "ProductDetail fetched successfully";
     public static final String PRODUCTDETAIL_DUPLICATE = "ProductDetail's name already exists";
 
+    public static final String CART_ITEM_CREATED_SUCCESS = "Item added successfully";
+    public static final String CART_ITEM_UPDATED_SUCCESS = "Item updated successfully";
+    public static final String CART_ITEM_FETCHED_SUCCESS = "Cart items fetched successfully";
+    public static final String CART_ITEM_DELETED_SUCCESS = "Cart item deleted successfully";
+
     public static final String VALIDATION_FAILED = "Validation failed";
     public static final String RESOURCE_NOT_FOUND = "Resource not found";
     public static final String INTERNAL_SERVER_ERROR = "Internal server error";
